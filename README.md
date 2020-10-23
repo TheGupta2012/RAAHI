@@ -18,6 +18,13 @@ information for his or her navigation.
  
 # PROCESS
 ## openCV
+ - To run 
+    - In the file Step By Step Lane.ipynb, replace the line of code 
+    > ```%cd "E:/InnerveHackathon/"```
+    with the directory in which your file resides.
+    - In the last cell of the same file, add the name of your input file with extension : 
+    > ```cap = cv.VideoCapture("name_of_vid.mp4")```
+    - Run all cells of the file and 4 output windows should appear on your screen.
  - Demonstrating the process on a sample image <br>
  <img src ="https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Detection%20Stages%20and%20%20Examples/cannyOrig.jpg" width = 360px height = 260px>
  - Gaussian Blur <br>
