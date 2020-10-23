@@ -19,12 +19,12 @@ information for his or her navigation.
 # PROCESS
 ## openCV
  - Demonstrating the process on a sample image <br>
- <img src ="https://github.com/TheGupta2012/RAAHI/blob/master/Detection%20Stages%20and%20%20Examples/cannyOrig.jpg" width = 360px height = 260px>
+ <img src ="https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Detection%20Stages%20and%20%20Examples/cannyOrig.jpg" width = 360px height = 260px>
  - Gaussian Blur <br>
- <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/Detection%20Stages%20and%20%20Examples/GaussianBlur.png" width = 360px height = 260px>
+ <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Detection%20Stages%20and%20%20Examples/GaussianBlur.png" width = 360px height = 260px>
  - Canny Filtered and Segmented Canny<br>
- <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/Detection%20Stages%20and%20%20Examples/Cannysample.jpg" width = 360px height = 260px style="float:left">
- <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/Detection%20Stages%20and%20%20Examples/Segemented%20Canny%20Sample.png" width = 360px height  =260px>
+ <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Detection%20Stages%20and%20%20Examples/Cannysample.jpg" width = 360px height = 260px style="float:left">
+ <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Detection%20Stages%20and%20%20Examples/Segemented%20Canny%20Sample.png" width = 360px height  =260px>
  
 ## Final Output on Dataset
- <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/Snippets/snipgif.gif" width = 420px height = 360px>
+ <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Snippets/snipgif.gif" width = 420px height = 360px>
