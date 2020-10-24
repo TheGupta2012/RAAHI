@@ -25,6 +25,7 @@ information for his or her navigation.
     - In the last cell of the same file, add the name of your input file with extension : 
     > ```cap = cv.VideoCapture("name_of_vid.mp4")```
     - Run all cells of the file and 4 output windows should appear on your screen.
+    - Press <b>q</b> to quit the windows any time.
  - <b>Final Output on Dataset</b><br>
  <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Snippets/snipgif.gif" width = 420px height = 360px><br>
  - Demonstrating the process on a sample image <br>
