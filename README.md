@@ -18,7 +18,7 @@ information for his or her navigation.<br>
  
 # PROCESS
  
-## openCV
+## Lane Detection - openCV
  > Contributed by [Harshit Gupta](https://github.com/TheGupta2012)
  - To run 
     - In the file Step By Step Lane.ipynb, replace the line of code 
@@ -28,10 +28,17 @@ information for his or her navigation.<br>
     > ```cap = cv.VideoCapture("name_of_vid.mp4")```
     - Run all cells of the file and 4 output windows should appear on your screen.
     - Press <b>q</b> to quit the windows any time.
+ - The openCV library of python was used to detect the lanes in the frames of our dataset.
+ - The hierarchy algorithms used were - 
+    - Grayscaling for elimination of RGB channels.
+    - Gaussian Blurring for removing noise
+    - Canny Edge Detection and Image segmentation
+    - Hough transform to detect prominent lines from detected edges.
+ - The final lines resulting from Hough Transform were overlayed on the frames to produce final output.
  - <b>Final Output on Dataset</b><br>
  <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Snippets/snipgif.gif" width = 420px height = 360px><br>
 
-## Convolutional Neural Networks and YOLO Object Detection
+## Lane Detection - CNN and YOLO Object Detection
  > Contributed by [Aditya Karn](https://github.com/AdityaKarn)
  - A standard implementation of deep neural networks was used to overcome the shortcomings of the Lane Detection through openCV. Some of them 
   were <b>not being able to detect the curvature of the path of a lane</b> and <b>shifting of lines regarding to the noise present in the image
