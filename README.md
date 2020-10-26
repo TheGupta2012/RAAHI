@@ -40,11 +40,11 @@ information for his or her navigation.<br>
  - With CNN, we predicted 12 things. What were they? We assumed a lane to be majorly composed of six <b>anchor points</b> and tried to predict the x and y
    co-ordinates of anchor points of the left and the right lanes through CNN.
  - OUR DATASET LABELLER<br>
- <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/CNN%20Lanes/Labelling%20Script%20and%20Labels/labeller-ss.jpg" width = 380px height = 300px><br>
+ <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/CNN%20Lanes/Labelling%20Script%20and%20Labels/labeller-ss.jpg" width = 280px height = 200px><br>
  - We used a standard implementation of a CNN for the predictions which turned out to be better than expected, given that the dataset was limited 
    and the number of epochs were limited to 40 to avoid overfitting.
- - OUR RESULTS  
- <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/CNN%20Lanes/Results/cnn4.jpg" width = 380px height = 300px>
+ - OUR RESULTS<br>
+   <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/CNN%20Lanes/Results/cnn4.jpg" width = 280px height = 400px>
   
 
  
