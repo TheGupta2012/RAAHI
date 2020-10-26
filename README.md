@@ -31,7 +31,7 @@ information for his or her navigation.<br>
  - <b>Final Output on Dataset</b><br>
  <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Snippets/snipgif.gif" width = 420px height = 360px><br>
 
-## Convolutional Neural Networks and Yolo 
+## Convolutional Neural Networks and YOLO Object Detection
  > Contributed by [Aditya Karn](https://github.com/AdityaKarn)
  - A standard implementation of deep neural networks was used to overcome the shortcomings of the Lane Detection through openCV. Some of them 
   were <b>not being able to detect the curvature of the path of a lane</b> and <b>shifting of lines regarding to the noise present in the image
