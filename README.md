@@ -1,9 +1,9 @@
-# RAAHI
+# [RAAHI](https://www.adityakarn.me/innerve.html)
 ## Navigation for the Visually Impaired
 How does a visually impaired person find his or her way around anywhere? Can computer vision help in that , atleast to some extent?
 ### Objective
 To make a computer vision model which detects the lanes, objects and obstacles in a person's path and provides 
-information for his or her navigation.
+information for his or her navigation.<br>
 
 ### Tasks
 <ul><li> To make a lane detector which identifies walkable lanes and produce an output on the fly.</li>
@@ -17,7 +17,9 @@ information for his or her navigation.
  - Used the standard YOLO algorithm for the implementation of the object detectors.
  
 # PROCESS
+ 
 ## openCV
+ > Contributed by [Harshit Gupta](https://github.com/TheGupta2012)
  - To run 
     - In the file Step By Step Lane.ipynb, replace the line of code 
     > ```%cd "E:/InnerveHackathon/"```
@@ -38,10 +40,19 @@ information for his or her navigation.
  
 
 
-## Convolutional Neural Networks 
+## Convolutional Neural Networks and Yolo 
+ > Contributed by [Aditya Karn](https://github.com/AdityaKarn)
  - A standard implementation of deep neural networks was used to overcome the shortcomings of the Lane Detection through openCV. Some of them 
   were <b>not being able to detect the curvature of the path of a lane</b> and <b>shifting of lines regarding to the noise present in the image
   such as gravel on road or patterns in a sidewalk</b>
+ - Since this was not a straightforward classification or regression problem, we had to first identify what to predict with CNN. 
+ - With CNN, we predicted 12 things. What were they? We assumed a lane to be majorly composed of six <b>anchor points</b> and tried to predict the x and y
+   co-ordinates of anchor points of the left and the right lanes through CNN.
+ - OUR DATASET LABELLER <br>
+ < img src = "" width = 300px height = 300px>
+ - We used a standard implementation of a CNN for the predictions which turned out to be better than expected, given that the dataset was limited 
+   and the number of epochs were limited to 40 to avoid overfitting.
+ - OUR RESULTS <br> 
   
 
  
