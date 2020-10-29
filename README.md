@@ -60,7 +60,7 @@ visually impaired and produced an output on the fly. The neural net model used f
 - It can be clearly seen that the results obtained on the frames were quite clear and the accuracy was very high.
 - OUR RESULTS<br>
 <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/YOLO/Results/yolo1.png" width = 380px height = 290px> <br>
-> Implementation details available [here](https://github.com/AdityaKarn/innerve-hackathon)
+> Implementation details available [here](https://github.com/AdityaKarn/innerve-hackathon#how-to-run)
 
 ## Where to go from here?
 - Our project currently comprises of three different models that are used for lane detection and object detection separately. We intend
