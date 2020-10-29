@@ -43,6 +43,7 @@ information for his or her navigation.<br>
  - A standard implementation of deep neural networks was used to overcome the shortcomings of the Lane Detection through openCV. Some of them 
   were <b>not being able to detect the curvature of the path of a lane</b> and <b>shifting of lines regarding to the noise present in the image
   such as gravel on road or patterns in a sidewalk</b>
+## Lane Detection - CNN
  - Since this was not a straightforward classification or regression problem, we had to first identify what to predict with CNN. 
  - With CNN, we predicted 12 things. What were they? We assumed a lane to be majorly composed of six <b>anchor points</b> and tried to predict the x and y
    co-ordinates of anchor points of the left and the right lanes through CNN.
@@ -52,6 +53,20 @@ information for his or her navigation.<br>
    and the number of epochs were limited to 40 to avoid overfitting.
  - OUR RESULTS<br>
    <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/CNN%20Lanes/Results/cnn4.jpg" width = 280px height = 400px>
-  
+## Object Detection - YOLO Algorithm
+- The task of <b>Object Detection</b> in video frames was implemented using the YOLO algorithm on pretrained weights.
+- We detetected numerous classes of objects that were termed as obstacles for the 
+visually impaired and produced an output on the fly. The neural net model used for the predictions was <b>Darknet-53</b>
+- It can be clearly seen that the results obtained on the frames were quite clear and the accuracy was very high.
+- OUR RESULTS<br>
+<img src = "https://github.com/TheGupta2012/RAAHI/blob/master/YOLO/Results/yolo1.png" width = 380px height = 290px> <br>
+> Implementation details available [here](https://github.com/AdityaKarn/innerve-hackathon)
 
+## Where to go from here?
+- Our project currently comprises of three different models that are used for lane detection and object detection separately. We intend
+ to combine all our models and make a final overlayed frame that is capable of detection of lanes as well as objects.
+- Another aspect of our project that needs to be looked over is deployment. We intend to deploy our project through the upcoming 
+  Tensorflow lite for mobile applications and hope to make this into a small application that can be personalized according to the user.
+- Last but not the least, linking GPS functionality to our project is the one thing that would enable us to give directions for not only
+ safe navigation but also ensure the user can reach his or her destination independently with little or no help.
  
