@@ -1,4 +1,4 @@
-# [RAAHI](https://www.adityakarn.me/innerve.html)
+# RAAHI
 ## Navigation for the Visually Impaired
 How does a visually impaired person find his or her way around anywhere? Can computer vision help in that , atleast to some extent?
 ### Objective
