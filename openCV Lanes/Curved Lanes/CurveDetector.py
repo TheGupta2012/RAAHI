@@ -15,76 +15,59 @@ class Curve():
             raise Exception("Invalid window size given") 
         self.window_size = window_size
         
-        
-    def find_non_zero(self,frame):
-        '''
-        Finds all the non zero points inside the Trapezium boundary
-        Faster than cv.FindNonZero...
-        PARAMETERS: frame : binary image for which we want non zero x,y coords
-        RETURNS: a list of 2-tuples of the non zero points , sorted by x 
-        '''
-        # this code is written manually to speed up computational cost
-        half = int(frame.shape[0]/2) # height / 2
-        row = frame.shape[0] - 2
-        left, right = 0,frame.shape[1] 
-        width = frame.shape[1]
-        points =[]
-        while row > half and left + int(0.08*width) < right - int(0.08*width):
-            for i in range(left,right):
-                if(frame[row][i] != 0):
-                    points.append((i,row))
-            left+=3
-            right-=3
-            row-=4
-        return sorted(points)
-    
-    def isInside(self,point,left_lane,right_lane):
-        '''Function to check whether the point given 
-        lies inside the parallelogram or not 
-        Cross product of all pairwise triangles must add 
-        up to the area of parallelogram. 
-        PARAMETERS: point ,> a 2,tuple which contains the 
-                            co,ordinates of the point 
-                    left_lane ,>2,tuple which consists of  the 
-                            left side of the parallelogram
-                    right_lane ,>2 ,tuple which consists of the 
-                            right side of the parallelogram 
-        RETURNS : Boolean specifying whether the point lies 
-                  inside or not '''
-        bottom_left = left_lane[0]
-        bottom_right = right_lane[0]
-        top_left = left_lane[1]
-        top_right = right_lane[1]
-        
-        # start from top 
-        A1B = np.subtract(top_left,point)
-        A1C = np.subtract(top_right,point )
-        a1 = 0.5 * abs(np.cross(A1B,A1C))
-        
-        # right 
-        A2B = np.subtract(top_right,point )
-        A2C = np.subtract(bottom_right,point)
-        a2 = 0.5 * abs(np.cross(A2B,A2C))
-        
-        #bottom 
-        A3B = np.subtract(bottom_right,point) 
-        A3C = np.subtract(bottom_left,point)
-        a3 = 0.5 * abs(np.cross(A3B,A3C))
-        
-        #left 
-        A4B = np.subtract(bottom_left,point) 
-        A4C = np.subtract(top_left,point) 
-        a4 = 0.5 * abs(np.cross(A4B,A4C))
-        
-        AB = np.subtract(top_left,bottom_left)
-        AC = np.subtract(bottom_right,bottom_left) 
-        A = abs(np.cross(AB,AC))
-        
-        if(a1+a2+a3+a4 == A):
-            return True
-        else:
-            return False
-        
+# updated the points acquiring 
+    def get_lane_points(self,frame,left,right):
+        '''PARAMETERS: frame : segmented binary image 
+                       left : left lane of the trapezium segment 
+                       right : right lane of the trapezium segment 
+
+        RETURNS : points : a list of 2 tuples of proposed lane coords'''
+        points = []
+        left_x = left[0][0]
+        left_y = left[0][1]
+        width,height = frame.shape[1],frame.shape[0]
+        height-=1 # corner case 
+        # side of the square
+        side = 50
+        right_x = right[0][0] - side
+        # generate square : bottom left,bottom right, top right, top left 
+        square = [(left_x,height),(left_x+side,height),(left_x+side,height - side),(left_x,height - side)]
+        # start at the bottom 
+        # while the base of the square is inside the trapezium : assuming trapezium top at half of the height
+        while (square[0][1] > int(0.3*height)):
+            # while top left corner under the right lane, continue
+            while(square[2][0] < right_x):
+                # traverse left to right 
+                left_end= square[0][0]
+                right_end = left_end + side
+                bottom_end = square[0][1]
+                upper_end = bottom_end - side 
+                # start moving bottom to top 
+                sq_points = []
+                count = 0
+                for i in range(bottom_end,upper_end,-1):
+                    # start moving left to right
+                    for j in range(left_end,right_end):
+                        if(frame[i][j] > 0):
+                            count+=1
+                            sq_points.append((i,j))
+                # if the percentage of points is greater than 15% , keep else reject 
+                perc = count/25 # x% of 2500 
+                if(perc < 10):
+                    for k in sq_points:
+                        points.append(k)
+                # update the square 
+                x,y = square[1][0],square[1][1]
+                square = [(x,y),(x+side,y),(x+side,y-side),(x,y-side)]
+
+            # update the base of square
+            left_x += side # shift right 
+            left_y -= side # shift up 
+            right_x-= side # shift the right point left
+            square = [(left_x,left_y),(left_x+side,left_y),(left_x+side,left_y-side),(left_x,left_y-side)]
+
+        return points
+
     def get_left_curve(self,frame,left_lane):
         '''Method to calculate the left fit curve for the 
         given frame 
