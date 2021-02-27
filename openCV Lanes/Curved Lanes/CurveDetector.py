@@ -6,189 +6,135 @@ class Curve():
                                     window to be 
       METHODS: // to-do
     '''
-    def __init__(self,
-                window_size = 0.2):
-        
-        self.left_coords = []
-        self.right_coords = []
-        if(window_size >=1 or window_size<=0):
-            raise Exception("Invalid window size given") 
-        self.window_size = window_size
-        
-# updated the points acquiring 
-    def get_lane_points(self,frame,left,right):
-        '''PARAMETERS: frame : segmented binary image 
-                       left : left lane of the trapezium segment 
-                       right : right lane of the trapezium segment 
+    def __init__(self,draw = False):
+        self.non_zero = []
+        self.prev_left = None
+        self.prev_right = None
+        self.draw = draw
+    def get_lane_points(self,frame, left, right, pxx=10, pxy=30):
+        '''
+        PARAMETERS: frame, left -> points of left boundary, right -> points of right boundary
+                    pxx -> pixel size of x 
+                    pxy -> pixel size in y
+        RETURNS: points : a list of 2 tuples of proposed lane coords'''
+        x_start = left[0][0]
+        x_end = right[0][0]
+        y_start = left[1][1]
+        y_end = left[0][1]
+        x = np.array([], dtype=np.uint32)
+        y = np.array([], dtype=np.uint32)
+        for i in range(y_start, y_end, pxy):
+            for j in range(x_start, x_end, pxx):
+                if((pxx*pxy)/40 < np.count_nonzero(frame[i:i+pxx, j:j+pxy]) < (pxx*pxy)/15):
+                    nz = np.nonzero(frame[i:i+pxx, j:j+pxy])
+                    x = np.hstack((x, nz[0]+i))
+                    y = np.hstack((y, nz[1]+j))
+        return np.transpose((x, y))
 
-        RETURNS : points : a list of 2 tuples of proposed lane coords'''
-        points = []
-        left_x = left[0][0]
-        left_y = left[0][1]
-        width,height = frame.shape[1],frame.shape[0]
-        height-=1 # corner case 
-        # side of the square
-        side = 50
-        right_x = right[0][0] - side
-        # generate square : bottom left,bottom right, top right, top left 
-        square = [(left_x,height),(left_x+side,height),(left_x+side,height - side),(left_x,height - side)]
-        # start at the bottom 
-        # while the base of the square is inside the trapezium : assuming trapezium top at half of the height
-        while (square[0][1] > int(0.3*height)):
-            # while top left corner under the right lane, continue
-            while(square[2][0] < right_x):
-                # traverse left to right 
-                left_end= square[0][0]
-                right_end = left_end + side
-                bottom_end = square[0][1]
-                upper_end = bottom_end - side 
-                # start moving bottom to top 
-                sq_points = []
-                count = 0
-                for i in range(bottom_end,upper_end,-1):
-                    # start moving left to right
-                    for j in range(left_end,right_end):
-                        if(frame[i][j] > 0):
-                            count+=1
-                            sq_points.append((i,j))
-                # if the percentage of points is greater than 15% , keep else reject 
-                perc = count/25 # x% of 2500 
-                if(perc < 10):
-                    for k in sq_points:
-                        points.append(k)
-                # update the square 
-                x,y = square[1][0],square[1][1]
-                square = [(x,y),(x+side,y),(x+side,y-side),(x,y-side)]
 
-            # update the base of square
-            left_x += side # shift right 
-            left_y -= side # shift up 
-            right_x-= side # shift the right point left
-            square = [(left_x,left_y),(left_x+side,left_y),(left_x+side,left_y-side),(left_x,left_y-side)]
+    def detect_curve(self,img, x, y, left, right):
+        ''' PARAMETRS: Frame, x-> X coordinates of white points , y-> Y coordinates of white points
+                       left -> Points of left boundary
+                       right -> Points of right boundary
 
-        return points
+            RETURNS: -> Image with the single curve traced
+        '''
+        img2 = np.zeros_like(img)
+#         y = -y
+        a, b, c = np.polyfit(x, y, 2)
+        x_start = left[0][0]
+        x_end = right[0][0]
+        y_start = left[1][1]
+        y_end = left[0][1]
+        for i in range(min(x), max(x)):
+            y_ = int(a*i*i+b*i+c)
+            try:
+                if(y_ < img2.shape[0] and y_>0):
+                    img2[i, y_] = 255
+            except:
+                pass
+        return img2
 
-    def get_left_curve(self,frame,left_lane):
-        '''Method to calculate the left fit curve for the 
-        given frame 
-        PARAMETERS: frame : the image frame 
-                    left_lane : the boundary left lane of segmented image
-        RETURNS: None : if no curve detected 
-                 3-tuple: if curve detected (A,B,C) : coefficients of 
-                    x^2, x and the constant factor in Ax^2 + Bx + C'''
-        if(left_lane is None):
-            raise Exception ("No left lane given")
-            return 
-        
-        width = frame.shape[1]
-        shift = self.window_size * width
-        # start drawing windows and fitting curves 
-        xy = self.find_non_zero(np.array(frame))
-        left = left_lane  #-> like this - '/'
-        # get the right lane -> '/'
-        right = ((left[0][0] + shift,left[0][1]),(left[1][0]+shift,left[1][1]))
-        
-        while right[0][0] < int(0.5 * width):
-            # get all the points that are non zero inside the parallelogram 
-            # and get there x-y coords 
-            X, Y =[],[]
-            for k in xy:
-                if(self.isInside(k,left,right) == True): 
-                    # to - do
-                    X.append(k[0])
-                    Y.append(k[1])
-            '''Only calculate the parabola if you actually 
-            have more than 100 points to fit the curve to.
-            This is because the points may just be noise if they are 
-            very less'''
-            if(len(X) <= 40):
-                # shift window
-                left = right 
-                right = ((left[0][0] + shift,left[0][1]),(left[1][0]+shift,left[1][1]))
-                continue 
-            # polyfit returns a 3 tuple with the 
-            # x^2 coefficient as 1st element, x as 2nd and constant as 3rd
-            parabola = np.polyfit(X,Y,2)
-            # save polynomial coords 
-            left = right 
-            right = ((left[0][0] + shift,left[0][1]),(left[1][0]+shift,left[1][1]))
-            
-            self.left_coords.append(parabola)
-            
-        A,B,C = [],[],[]
-        for k in self.left_coords:
-            A.append(k[0])
-            B.append(k[1])
-            C.append(k[2])
-        #average out 
-        try:
-            A = sum(A)/len(A)
-            B = sum(B)/len(B)
-            C = sum(C)/len(C)
+
+    def curveTrace(self,frame, left, right):
+        '''
+        PARAMETERS:  frame,left - coordinates of left boundary, right - coordinates of right boundary
+        '''
+        height, width = frame.shape
+        self.non_zero = []
+        # splitting the image to two parts
+        left_img = frame[:, :width//2]
+        right_img = frame[:, width//2+1:]
+
+
+        # Working on the left curve 
+        try:   
+            curr_points = self.get_lane_points(left_img, left, right, 10, 30)
+         # what if very less points?
+            if(self.prev_left is None):
+                self.prev_left = curr_points
+                self.non_zero.append(curr_points)
+                x,y = np.transpose(curr_points)
+            else:
+                if(len(curr_points) < 0.4*len(self.prev_left) or curr_points is None):
+                    x,y = np.transpose(self.prev_left)
+                    self.non_zero.append(self.prev_left)
+                else:
+                    x,y = np.transpose(curr_points)
+                    self.prev_left = curr_points
+                    self.non_zero.append(curr_points)
+
+            left_curve = self.detect_curve(left_img, x, y, left, right)
         except:
-            return None
-        return (A,B,C)
-    
-    def get_right_curve(self,frame,right_lane):
-        '''Method to calculate the left fit curve for the 
-        given frame 
-        PARAMETERS: frame : the image frame 
-                    left_lane : the boundary left lane of segmented image
-        RETURNS: None : if no curve detected 
-                 3-tuple: if curve detected (A,B,C) - coefficients of 
-                    x^2, x and the constant factor in Ax^2 + Bx + C'''
-        if(right_lane is None):
-            raise Exception ("No right lane given")
-            return 
-        width = frame.shape[1]
-        shift = self.window_size * width
-        # get all non-zero x,y coordinates sorted by x 
-        xy = self.find_non_zero(np.array(frame))
-
-        # start drawing windows and fitting curves 
-        right = right_lane  #-> like this - '\'
-        # get the left lane - '\'
-        left = ((right[0][0] - shift,right[0][1]),(right[1][0]-shift,right[1][1]))
-        while left[0][0] > int(0.5 * width):
-            
-            # get all the non -zero points that are inside the parallelogram 
-            # and get there x-y coords 
-            X, Y =[],[]
-            for k in xy:
-                if(self.isInside(k,left,right) == True): 
-                    # to - do
-                    X.append(k[0])
-                    Y.append(k[1])
-            '''Only calculate the parabola if you actually 
-            have like more than 50 points to fit the curve to.
-            This is because the points may just be noise if they are 
-            very less'''
-            if(len(X) <= 40):
-                # shift window 
-                right = left 
-                left = ((right[0][0] - shift,right[0][1]),(right[1][0]-shift,right[1][1]))
-                continue 
-                
-            # polyfit returns a 3 tuple with the 
-            # x^2 coefficient as 1st element, x as 2nd and constant as 3rd
-            parabola = np.polyfit(X,Y,2)
-            # save polynomial coords 
-            self.right_coords.append(parabola)
-            
-            
-        A,B,C = [],[],[]
-        for k in self.right_coords:
-            A.append(k[0])
-            B.append(k[1])
-            C.append(k[2])
+            left_curve = left_img
         
-        #average out 
+        # Working on the right curve
         try:
-            A = sum(A)/len(A)
-            B = sum(B)/len(B)
-            C = sum(C)/len(C)
-        # tuple with right lane parameters
-        except:
-            return None    
-        return (A,B,C)
+            flipped_right_img = cv.flip(right_img, 1)
+            curr_points = self.get_lane_points(flipped_right_img, left, right, 10, 30)
         
+        # what if very less points?    
+            if(self.prev_right is None ):
+                self.prev_right = curr_points
+                x,y = np.transpose(curr_points)
+                self.non_zero.append(curr_points)
+            else:
+                if(len(curr_points) < 0.4*len(self.prev_right) or curr_points is None): #30 % 
+                    x,y = np.transpose(self.prev_right)
+                    self.non_zero.append(self.prev_right)
+                else:
+                    self.prev_right = curr_points
+                    x,y = np.transpose(curr_points)
+                    self.non_zero.append(curr_points)
+            
+            right_curve = self.detect_curve(flipped_right_img, x, y, left, right)
+            flipped_right_curve = cv.flip(right_curve,1)
+        except:
+            flipped_right_curve=right_img
+        
+        
+        img2 = np.hstack((left_curve, flipped_right_curve))
+        return img2
+
+    def drawCurve(self,image, curve,color=(255,0,0),thickness=3):
+        '''
+        PARAMETERS:  image: Original image colored
+                     curve -> Curve to draw on the image
+                     color -> color of the curve
+                     thickness -> Thickness of the curve '''
+        height, width, col = image.shape
+        if(self.draw == True):
+            start = curve.shape[0]//3
+        else:
+            start = curve.shape[0]
+        for i in range(start, curve.shape[0]):
+            for j in range(curve.shape[1]):
+                if(curve[i, j] != 0):
+                    for x in range(thickness):
+                        try:
+                            image[i, j+x] = color
+                        except:
+                            pass
+        return image
+
+

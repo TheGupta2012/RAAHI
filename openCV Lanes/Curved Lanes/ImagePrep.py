@@ -125,10 +125,10 @@ class PrepareImage():
         segment = cv.bitwise_and(frame, mask)
         
         # boundary lines...
-        cv.line(segment,(0,height),(int(width*self.segment_x)-shift,int(height*self.segment_y)),(250,0,0),1)
-        cv.line(segment,(width,height),(int(width*self.segment_x)+shift,int(height*self.segment_y)),(250,0,0),1)
-        cv.line(segment,(int(width*self.segment_x)+shift,int(height*self.segment_y)),
-             (int(width*self.segment_x)-shift,int(height*self.segment_y)),(250,0,0),1)
+        # cv.line(segment,(0,height),(int(width*self.segment_x)-shift,int(height*self.segment_y)),(250,0,0),1)
+        # cv.line(segment,(width,height),(int(width*self.segment_x)+shift,int(height*self.segment_y)),(250,0,0),1)
+        # cv.line(segment,(int(width*self.segment_x)+shift,int(height*self.segment_y)),
+        #      (int(width*self.segment_x)-shift,int(height*self.segment_y)),(250,0,0),1)
         
         return segment 
     # this needs to be less tilted 
@@ -137,8 +137,8 @@ class PrepareImage():
         width = frame.shape[1]
         shift = int(0.08 * width)
         points = np.array([
-                [(shift,height),(width-shift,height),(int(width*self.segment_x)+shift,int(height*self.segment_y)),
-                 (int(width*self.segment_x)-shift,int(height*self.segment_y))]
+                [(2*shift,height),(width-2*shift,height),(int(width*self.segment_x)+2*shift,int(height*self.segment_y)),
+                 (int(width*self.segment_x)-2*shift,int(height*self.segment_y))]
             ])
         left = (points[0][0],points[0][3])
         right = (points[0][1],points[0][2])
