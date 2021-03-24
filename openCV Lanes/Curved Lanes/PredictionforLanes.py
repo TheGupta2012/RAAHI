@@ -28,13 +28,19 @@ class Predictions():
             raise ValueError("Invalid range for threshold")
         self.threshold = threshold 
             
-    def get_lane_middle(self,X):
+    def get_lane_middle(self,img,X):
         '''RETURNS: middle x co-ordinate based on the 
                     basis defined in class parameters '''
         if(self.basis == "mean"):
-            mid = int(np.mean(X))
+            try:
+                mid = int(np.mean(X))
+            except:
+                mid = img.shape[1]//2
         else:
-            mid = int(np.median(X))
+            try:
+                mid = int(np.median(X))
+            except:
+                mid = img.shape[1]//2
         return mid
     
     def shifted_lane(self,frame,deviation):
@@ -84,7 +90,10 @@ class Predictions():
                     right_x+=1
                 X.append(k[0])
         # get the lane middle and draw 
-        lane_mid = self.get_lane_middle(X)
+        try:
+            lane_mid = self.get_lane_middle(frame,X)
+        except:
+            lane_mid = center_x
         cv.line(frame,(lane_mid,height-1),(lane_mid,height - width//10),(0,0,0),2)
         # calculate shift
         shift_allowed = int(self.threshold*width)
@@ -108,13 +117,16 @@ class Predictions():
             right_turn = "Right turn is approaching. Please start turning right"
             # if relative change in percentage of points is < 10% then 
             # going fine 
-            left_perc = left_x*100/(total_points) 
-            right_perc = right_x*100/(total_points) 
-            
+            try:
+                left_perc = left_x*100/(total_points) 
+                right_perc = right_x*100/(total_points) 
+            except:
+                left_perc = 50
+                right_perc = 50
             if(abs(left_perc - right_perc) < 25):
                 cv.putText(frame,correct,(40,40),1,1.5,(100,255,10),2)
             else:
-                if(left_perc > right_perc): # more than 10% relative change 
+                if(left_perc < right_perc): # more than 10% relative change 
                     # means a approximately a right turn is approaching 
                     cv.putText(frame,right_turn,(40,40),1,1.5,(100,10,255),2)
                 else:

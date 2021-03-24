@@ -1,0 +1,19 @@
+person
+bicycle
+fire hydrant
+stop sign
+bench
+backpack
+handbag
+suitcase
+skateboard
+bottle
+chair
+soja
+pottedplant
+diningtable
+tvmonitor
+microwave
+sink
+refrigerator
+vase
