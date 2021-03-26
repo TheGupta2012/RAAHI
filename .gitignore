@@ -1,3 +1,4 @@
 *__pycache__/
 *.ipynb_checkpoints/
 *Codes/
+YOLO/files/yolov3.weights
