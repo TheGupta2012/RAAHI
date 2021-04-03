@@ -1,4 +1,7 @@
+ <img src='logo.jpg' width = 130 height = 150 >
+ 
 # RAAHI
+
 ## Navigation for the Visually Impaired
 How does a visually impaired person find his or her way around anywhere? Can computer vision help in that , atleast to some extent?
 ### Objective
@@ -12,31 +15,44 @@ information for his or her navigation.<br>
 </ul>
 
 ### What we did 
- - Used openCV for producing a lane detector. Inherent techniques used were Canny detection and Hough transforms.
- - Used Convolutional Neural Networks to work upon the limitations of the openCV model.'
+ - Used openCV for producing a lane detector. Inherent techniques used were Canny detection and Polynomial Regression
  - Used the standard YOLO algorithm for the implementation of the object detectors.
  
 # PROCESS
  
 ## Lane Detection - openCV
- > Contributed by [Harshit Gupta](https://github.com/TheGupta2012)
- - To run 
-    - In the file Step By Step Lane.ipynb, replace the line of code 
-    > ```%cd "E:/InnerveHackathon/"```
-    with the directory in which your file resides.
-    - In the last cell of the same file, add the name of your input file with extension : 
-    > ```cap = cv.VideoCapture("name_of_vid.mp4")```
-    - Run all cells of the file and 4 output windows should appear on your screen.
-    - Press <b>q</b> to quit the windows any time.
  - The openCV library of python was used to detect the lanes in the frames of our dataset.
  - The hierarchy algorithms used were - 
     - Grayscaling for elimination of RGB channels.
     - Gaussian Blurring for removing noise
     - Canny Edge Detection and Image segmentation
-    - Hough transform to detect prominent lines from detected edges.
+    - **Further Noise removal through thresholding over segmented parts of image**
+    - **Point aggregation and Polynomial fitting over the detected points**
+ ### OLD APPROACH
  - The final lines resulting from Hough Transform were overlayed on the frames to produce final output.
  - <b>Final Output on Dataset</b><br>
  <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Snippets/snipgif.gif" width = 420px height = 360px><br>
+ 
+ ### NEW APPROACH ✨
+ > Segmentation
+ - The Hough Transform approach to fit the lanes posed a serious limitation that it was only able to detect straight lines or sharp edges present in the image.
+ - Using the modified approach for lane detection, we analysed images by **dividing the whole image into segments**. This segmentation helped us to *further* reduce the noise present in our frames by - 
+    - Setting off those pixel values to 0 which had a very high density or a very low density in a particular segment. This was based on the assumption that any kind of noise in an image would either be an aggregation of a lot of points or very few points
+    - Leaving the Canny detected points as it is when there was relatively moderate density.
+    ## Image before segmentation noise removal 
+    
+    ## Image after segmentation noise removal
+    
+> Polynomial Fitting
+- Regression techniques are used to fit the best curve to a given set of points. Since Canny edge detector returns *precisely* that, we tried fitting **second degree polynomials** to the detected images
+- Since the curvature of the points only depends on the lane points and this curvature can be arbitrary, the **limitation of Hough Transform was overcome**
+     ### Final Curves detected
+     // to do...
+
+## Predictions for Lanes 
+- A predictor was built according to the curves that were detected and *audio outputs* were provided to the user according to the type of lane approaching.
+- The basis for the predictions was the amount of lane points present on the left and right of the frame middle and **mean** and **median** basis was used to detect the lane center.
+- A particular threshold was provided which identified how much *shift* from the lane center is considered as *good lane maintenance* and other outputs included *shift left, shift right, right turn and left turn detections*
 
 ## Lane Detection - CNN and YOLO Object Detection
  > Contributed by [Aditya Karn](https://github.com/AdityaKarn)
