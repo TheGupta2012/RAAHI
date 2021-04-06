@@ -35,24 +35,31 @@ information for his or her navigation.<br>
  
  ### NEW APPROACH ✨
  > Segmentation
+ 
  - The Hough Transform approach to fit the lanes posed a serious limitation that it was only able to detect straight lines or sharp edges present in the image.
  - Using the modified approach for lane detection, we analysed images by **dividing the whole image into segments**. This segmentation helped us to *further* reduce the noise present in our frames by - 
     - Setting off those pixel values to 0 which had a very high density or a very low density in a particular segment. This was based on the assumption that any kind of noise in an image would either be an aggregation of a lot of points or very few points
     - Leaving the Canny detected points as it is when there was relatively moderate density.
-    ## Image before segmentation noise removal 
-    
-    ## Image after segmentation noise removal
     
 > Polynomial Fitting
+
 - Regression techniques are used to fit the best curve to a given set of points. Since Canny edge detector returns *precisely* that, we tried fitting **second degree polynomials** to the detected images
 - Since the curvature of the points only depends on the lane points and this curvature can be arbitrary, the **limitation of Hough Transform was overcome**
-     ### Final Curves detected
-     // to do...
+
+## Final Curves detected
+
+### Sample 1     
+<img src= "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Video%20Samples/curve1.gif" width = 430 height = 240 ><br>
+
+### Sample 2
+<img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Video%20Samples/curve2.gif" width = 430 height = 240 > <br>
 
 ## Predictions for Lanes 
 - A predictor was built according to the curves that were detected and *audio outputs* were provided to the user according to the type of lane approaching.
 - The basis for the predictions was the amount of lane points present on the left and right of the frame middle and **mean** and **median** basis was used to detect the lane center.
 - A particular threshold was provided which identified how much *shift* from the lane center is considered as *good lane maintenance* and other outputs included *shift left, shift right, right turn and left turn detections*
+
+## Predictions Given 
 
 ## Lane Detection - CNN and YOLO Object Detection
  > Contributed by [Aditya Karn](https://github.com/AdityaKarn)
