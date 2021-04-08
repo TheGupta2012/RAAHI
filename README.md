@@ -31,27 +31,30 @@ information for his or her navigation.<br>
  ### OLD APPROACH
  - The final lines resulting from Hough Transform were overlayed on the frames to produce final output.
  - <b>Final Output on Dataset</b><br>
+ 
  <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Snippets/snipgif.gif" width = 420px height = 360px><br>
  
- ### NEW APPROACH ✨
- > Segmentation
+ ### 🆕 APPROACH 
+ > **Segmentation** 💡
  
  - The Hough Transform approach to fit the lanes posed a serious limitation that it was only able to detect straight lines or sharp edges present in the image.
  - Using the modified approach for lane detection, we analysed images by **dividing the whole image into segments**. This segmentation helped us to *further* reduce the noise present in our frames by - 
     - Setting off those pixel values to 0 which had a very high density or a very low density in a particular segment. This was based on the assumption that any kind of noise in an image would either be an aggregation of a lot of points or very few points
     - Leaving the Canny detected points as it is when there was relatively moderate density.
     
-> Polynomial Fitting
+> **Polynomial Fitting** 💡
 
 - Regression techniques are used to fit the best curve to a given set of points. Since Canny edge detector returns *precisely* that, we tried fitting **second degree polynomials** to the detected images
-- Since the curvature of the points only depends on the lane points and this curvature can be arbitrary, the **limitation of Hough Transform was overcome**
+- Since the curvature of the points only depends on the lane points and this curvature can be arbitrary, the **limitation of Hough Transform was overcome** 
 
 ## Final Curves detected
 
-### Sample 1     
+### 🔹 Sample 1     
+
 <img src= "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Video%20Samples/curve1.gif" width = 430 height = 240 ><br>
 
-### Sample 2
+### 🔹 Sample 2
+
 <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Video%20Samples/curve2.gif" width = 430 height = 240 > <br>
 
 ## Predictions for Lanes 
@@ -60,29 +63,30 @@ information for his or her navigation.<br>
 - A particular threshold was provided which identified how much *shift* from the lane center is considered as *good lane maintenance* and other outputs included *shift left, shift right, right turn and left turn detections*
 
 ## Predictions Given 
+- To show visible predictions, we have used openCV text to generate them on the fly, for the image. 
+- Originally, these predictions are intended to be given via *audio* signals and the **Text-to-Speech** module is used to generatte the outputs for the lane changes and whether a turn is approaching or not.
+- Each of the sample has been specifically chosen to show the **overcoming of the limitation of Hough Transform** by detecting curves in the video frame.
 
-## Lane Detection - CNN and YOLO Object Detection
+### 🔸 Sample1 
+
+<img src= "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Video%20Samples/predict1.gif" width = 590 height = 375 ><br>
+
+### 🔸 Sample 2
+
+<img src= "https://github.com/TheGupta2012/RAAHI/blob/master/openCV%20Lanes/Video%20Samples/predict2.gif" width = 590 height = 375 ><br>
+
+## YOLO Object Detection
  > Contributed by [Aditya Karn](https://github.com/AdityaKarn)
- - A standard implementation of deep neural networks was used to overcome the shortcomings of the Lane Detection through openCV. Some of them 
-  were <b>not being able to detect the curvature of the path of a lane</b> and <b>shifting of lines regarding to the noise present in the image
-  such as gravel on road or patterns in a sidewalk</b>
-## Lane Detection - CNN
- - Since this was not a straightforward classification or regression problem, we had to first identify what to predict with CNN. 
- - With CNN, we predicted 12 things. What were they? We assumed a lane to be majorly composed of six <b>anchor points</b> and tried to predict the x and y
-   co-ordinates of anchor points of the left and the right lanes through CNN.
- - OUR DATASET LABELLER<br>
- <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/CNN%20Lanes/Labelling%20Script%20and%20Labels/labeller-ss.jpg" width = 280px height = 200px><br>
- - We used a standard implementation of a CNN for the predictions which turned out to be better than expected, given that the dataset was limited 
-   and the number of epochs were limited to 40 to avoid overfitting.
- - OUR RESULTS<br>
-   <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/CNN%20Lanes/Results/cnn4.jpg" width = 280px height = 400px>
+
 ## Object Detection - YOLO Algorithm
 - The task of <b>Object Detection</b> in video frames was implemented using the YOLO algorithm on pretrained weights.
 - We detetected numerous classes of objects that were termed as obstacles for the 
 visually impaired and produced an output on the fly. The neural net model used for the predictions was <b>Darknet-53</b>
 - It can be clearly seen that the results obtained on the frames were quite clear and the accuracy was very high.
-- OUR RESULTS<br>
+
+### 🔸 Initial Results
 <img src = "https://github.com/TheGupta2012/RAAHI/blob/master/YOLO/Results/yolo1.png" width = 380px height = 290px> <br>
+
 > Implementation details available [here](https://github.com/AdityaKarn/innerve-hackathon#how-to-run)
 
 ## Where to go from here?
