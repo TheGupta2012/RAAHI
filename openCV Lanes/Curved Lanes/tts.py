@@ -1,6 +1,6 @@
 import pyttsx3
 
-def speak(text, rate=0.6,voice_type="female",volume=1):
+def speak(text, rate=1.4,voice_type="female",volume=1):
     engine=pyttsx3.init()   
     # speech rate
     engine.setProperty('rate',rate*engine.getProperty('rate'))

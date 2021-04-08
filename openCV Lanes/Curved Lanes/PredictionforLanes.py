@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## Predictions Class
+ ## Predictions Class
 
-# In[2]:
 
 
 import cv2 as cv
@@ -51,17 +50,21 @@ class Predictions():
         
         RETURNS: frame with shift outputs '''
         height,width = frame.shape[0],frame.shape[1]
-        shift_left = "Lane present on left. Shift left"
-        shift_right = "Lane present on right. Shift right"
+        shift_left = ["Lane present on left","Shift left"]
+        shift_right = ["Lane present on right","Shift right"]
         if(deviation < 0):
             # means person on the right and lane on the left 
             # need to shift left 
-            # cv.putText(frame,shift_left,(40,40),1,1.5,(100,10,255),2)
-            speak(shift_left)
+            cv.putText(frame,shift_left[0],(40,40),5,1.1,(100,10,255),2)
+            cv.putText(frame,shift_left[1],(40,70),5,1.1,(100,10,255),2)
+
+#             speak(shift_left)
         else:
             # person needs to shift right 
-            # cv.putText(frame,shift_right,(40,40),1,1.5,(100,255,10),2)
-            speak(shift_right)
+            cv.putText(frame,shift_right[0],(40,40),5,1.1,(100,255,10),2)
+            cv.putText(frame,shift_right[1],(40,70),5,1.1,(100,255,10),2)
+
+#             speak(shift_right)
         return frame
 
     def get_outputs(self,frame,points):
@@ -102,8 +105,8 @@ class Predictions():
         # calculate deviations and put on image 
         deviation = lane_mid - center_x
         deviation_text = "Deviation: "+str(np.round((deviation * 100/width),3)) + "%"
-        # cv.putText(frame,deviation_text,(int(lane_mid-60),int(height-width//(9.5))),1,2,(250,250,250),2)
-        speak(deviation_text)
+        cv.putText(frame,deviation_text,(int(lane_mid-60),int(height-width//(9.5))),1,1.3,(250,20,250),2)
+#         speak(deviation_text)
         
         if(abs(deviation) >= shift_allowed):
             # large deviation : give shift outputs only 
@@ -115,9 +118,9 @@ class Predictions():
             # frame 
             
             total_points= left_x + right_x 
-            correct = "Good Lane Maintainance. Continue straight"
-            left_turn = "Left turn is approaching. Please start turning left"
-            right_turn = "Right turn is approaching. Please start turning right"
+            correct = ["Good Lane Maintainance"," Continue straight"]
+            left_turn = ["Left turn is approaching","Please start turning left"]
+            right_turn = ["Right turn is approaching","Please start turning right"]
             # if relative change in percentage of points is < 10% then 
             # going fine 
             try:
@@ -127,25 +130,26 @@ class Predictions():
                 left_perc = 50
                 right_perc = 50
             if(abs(left_perc - right_perc) < 25):
-                # cv.putText(frame,correct,(40,40),1,1.5,(100,255,10),2)
-                speak(correct)
+                cv.putText(frame,correct[0],(40,40),5,1.1,(100,255,10),2)
+                cv.putText(frame,correct[1],(40,70),5,1.1,(100,255,10),2)
+
+#                 speak(correct)
             else:
-                if(left_perc < right_perc): # more than 10% relative change 
+                if(left_perc > right_perc): # more than 25% relative change 
                     # means a approximately a right turn is approaching 
-                    # cv.putText(frame,right_turn,(40,40),1,1.5,(100,10,255),2)
-                    speak(right_turn)
+                    cv.putText(frame,right_turn[0],(40,40),5,1.1,(100,10,255),2)
+                    cv.putText(frame,right_turn[1],(40,70),5,1.1,(100,10,255),2)
+
+#                     speak(right_turn)
                 else:
-                    # cv.putText(frame,left_turn,(40,40),1,1.5,(100,10,255),2)
-                    speak(left_turn)
+                    cv.putText(frame,left_turn[0],(40,40),5,1.1,(100,10,255),2)
+                    cv.putText(frame,left_turn[1],(40,70),5,1.1,(100,10,255),2)
+
+#                     speak(left_turn)
             # return the frame with the outputs 
             # to-do : output with sound 
             return frame 
 
-
-        
-
-
-# In[ ]:
 
 
 

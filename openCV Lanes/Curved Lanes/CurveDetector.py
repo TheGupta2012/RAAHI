@@ -29,6 +29,7 @@ class Curve():
                     nz = np.nonzero(frame[i:i+pxx, j:j+pxy])
                     x = np.hstack((x, nz[0]+i))
                     y = np.hstack((y, nz[1]+j))
+        
         return np.transpose((x, y))
 
 
@@ -40,6 +41,7 @@ class Curve():
             RETURNS: -> Image with the single curve traced
         '''
         img2 = np.zeros_like(img)
+        
 #         y = -y
         a, b, c = np.polyfit(x, y, 2)
         x_start = left[0][0]
@@ -76,7 +78,7 @@ class Curve():
                 self.non_zero.append(curr_points)
                 x,y = np.transpose(curr_points)
             else:
-                if(len(curr_points) < 0.4*len(self.prev_left) or curr_points is None):
+                if(len(curr_points) < int(0.6*len(self.prev_left)) or curr_points is None):
                     x,y = np.transpose(self.prev_left)
                     self.non_zero.append(self.prev_left)
                 else:
@@ -99,7 +101,7 @@ class Curve():
                 x,y = np.transpose(curr_points)
                 self.non_zero.append(curr_points)
             else:
-                if(len(curr_points) < 0.4*len(self.prev_right) or curr_points is None): #30 % 
+                if(len(curr_points) < int(0.6*len(self.prev_right)) or curr_points is None): #30 % 
                     x,y = np.transpose(self.prev_right)
                     self.non_zero.append(self.prev_right)
                 else:
@@ -116,7 +118,7 @@ class Curve():
         img2 = np.hstack((left_curve, flipped_right_curve))
         return img2
 
-    def drawCurve(self,image, curve,color=(255,0,0),thickness=3):
+    def drawCurve(self,image, curve,color=(255,255,0),thickness=3):
         '''
         PARAMETERS:  image: Original image colored
                      curve -> Curve to draw on the image
